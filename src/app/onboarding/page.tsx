@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { UserProfile, Gender, InterestedIn, RelationshipIntent } from '@/types/user';
-import { astrologyService } from '@/lib/astrology/astrologyService';
 import { searchCities, findCityCoordinates, CityLocation } from '@/lib/astrology/cities';
 import { computeCompleteNatalChart } from '@/lib/astrology/calculator';
 import { validateProfileContent } from '@/lib/safety';
 import { BirthChartCard } from '@/components/astrology/BirthChartCard';
+import { PhotoUpload } from '@/components/profile/PhotoUpload';
 import {
   Sparkles,
   ArrowRight,
@@ -17,11 +17,8 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Heart,
   User,
-  Check,
   AlertCircle,
-  Stars,
   Compass,
 } from 'lucide-react';
 
@@ -64,7 +61,7 @@ export default function OnboardingPage() {
   const [relationshipIntent, setRelationshipIntent] = useState<RelationshipIntent>('long-term');
   const [bio, setBio] = useState('Stargazer, architecture enthusiast, and vinyl lover. Seeking authentic cosmic resonance.');
   const [selectedInterests, setSelectedInterests] = useState<string[]>(['Astrology', 'Modern Art', 'Stargazing', 'Vinyl Records']);
-  const [selectedPhoto, setSelectedPhoto] = useState<string>(PRESET_AVATARS[0]);
+  const [selectedPhoto, setSelectedPhoto] = useState<string>(user?.photoURL || PRESET_AVATARS[0]);
 
   // Live calculated full natal chart (Sun, Moon, Rising, Venus, Mars)
   const computedChart = useMemo(() => {
@@ -145,8 +142,14 @@ export default function OnboardingPage() {
   };
 
   const handleFinishOnboarding = async () => {
-    setIsSubmitting(true);
     setError(null);
+
+    if (!selectedPhoto) {
+      setError('Please upload a profile photo or take a selfie.');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       // 1. Ensure chart calculation finishes safely with fallback
@@ -184,7 +187,7 @@ export default function OnboardingPage() {
         interestedIn: interestedIn || 'everyone',
         age: calculatedAge || 25,
         bio: bio.trim() || 'Stargazer, architecture enthusiast, and vinyl lover.',
-        profilePhotos: [selectedPhoto || PRESET_AVATARS[0]],
+        profilePhotos: [selectedPhoto],
         location: {
           city: birthCity.trim() || 'Paris',
           country: birthCountry.trim() || 'France',
@@ -460,41 +463,56 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4: Cosmic Portrait */}
+        {/* STEP 4: Cosmic Portrait (Live Selfie & Photo Upload) */}
         {step === 4 && (
           <div className="space-y-5 animate-in fade-in">
             <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-white">Choose Your Cosmic Portrait</h2>
-              <p className="text-xs text-text-secondary">Select an aesthetic portrait or upload your photo.</p>
+              <h2 className="text-2xl font-bold text-white">Your Cosmic Portrait</h2>
+              <p className="text-xs text-text-secondary">
+                Upload an authentic photo from your library or take a live selfie using your camera.
+              </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              {PRESET_AVATARS.map((url, idx) => {
-                const isChosen = selectedPhoto === url;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setSelectedPhoto(url)}
-                    className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all duration-200 group ${
-                      isChosen ? 'border-cosmic-purple shadow-cosmic scale-[1.03]' : 'border-white/10 opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <Image
-                      src={url}
-                      alt={`Avatar ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="150px"
-                    />
-                    {isChosen && (
-                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-cosmic-purple text-white flex items-center justify-center shadow-md">
-                        <Check className="w-3.5 h-3.5" />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+            {/* Interactive Photo Upload & Live Selfie Component */}
+            <PhotoUpload
+              photo={selectedPhoto}
+              onPhotoChange={(newPhoto) => {
+                setSelectedPhoto(newPhoto);
+                setError(null);
+              }}
+            />
+
+            {/* Optional Celestial Presets Alternative */}
+            <div className="pt-3 border-t border-white/10 space-y-2">
+              <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider block">
+                Or select an aesthetic celestial portrait
+              </span>
+              <div className="grid grid-cols-6 gap-2">
+                {PRESET_AVATARS.map((url, idx) => {
+                  const isChosen = selectedPhoto === url;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPhoto(url);
+                        setError(null);
+                      }}
+                      className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                        isChosen ? 'border-cosmic-purple shadow-cosmic scale-105' : 'border-white/10 opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <Image
+                        src={url}
+                        alt={`Preset ${idx + 1}`}
+                        fill
+                        className="object-cover pointer-events-none"
+                        sizes="60px"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
@@ -526,7 +544,7 @@ export default function OnboardingPage() {
           ) : (
             <button
               type="button"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !selectedPhoto}
               onClick={handleFinishOnboarding}
               className="px-7 py-3 rounded-xl bg-gradient-to-r from-cosmic-purple via-cosmic-pink to-amber-400 hover:opacity-90 text-white font-bold text-sm shadow-cosmic flex items-center gap-2 transition-all disabled:opacity-50"
             >

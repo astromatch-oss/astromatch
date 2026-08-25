@@ -6,23 +6,21 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useMatch } from '@/context/MatchContext';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
-  User,
   Shield,
   Trash2,
   LogOut,
   Save,
   CheckCircle,
   AlertTriangle,
-  Sparkles,
   MapPin,
   Calendar,
-  Lock,
 } from 'lucide-react';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, profile, updateProfile, signOut, deleteAccount, isDemoMode } = useAuth();
+  const { profile, updateProfile, signOut, deleteAccount } = useAuth();
   const { blockedUserIds } = useMatch();
 
   const [firstName, setFirstName] = useState(profile?.firstName || 'Aria');
@@ -30,6 +28,11 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const avatarPhoto = getOptimizedImageUrl(
+    profile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+    { width: 128, quality: 75 }
+  );
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +77,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-4 flex-col sm:flex-row text-center sm:text-left">
           <div className="w-20 h-20 rounded-2xl overflow-hidden relative border-2 border-cosmic-purple shadow-cosmic flex-shrink-0">
             <Image
-              src={profile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'}
+              src={avatarPhoto}
               alt={profile?.firstName || 'User'}
               fill
               className="object-cover"

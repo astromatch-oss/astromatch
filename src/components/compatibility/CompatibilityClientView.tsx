@@ -9,6 +9,7 @@ import { astrologyService } from '@/lib/astrology/astrologyService';
 import { ZODIAC_SIGNS } from '@/lib/astrology/zodiacData';
 import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   Sparkles,
   ArrowLeft,
@@ -37,6 +38,16 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
   const signA = ZODIAC_SIGNS[(userA.sunSign as ZodiacSign) || 'Scorpio'];
   const signB = ZODIAC_SIGNS[partnerProfile.sunSign] || ZODIAC_SIGNS['Pisces'];
 
+  const photoA = getOptimizedImageUrl(
+    myProfile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+    { width: 128, quality: 75 }
+  );
+
+  const photoB = getOptimizedImageUrl(
+    partnerProfile.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+    { width: 128, quality: 75 }
+  );
+
   return (
     <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6 space-y-6">
       {/* Top Header */}
@@ -61,7 +72,7 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
           <div className="flex flex-col items-center space-y-2">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden relative border-2 border-cosmic-purple shadow-cosmic">
               <Image
-                src={myProfile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'}
+                src={photoA}
                 alt={myProfile?.firstName || 'You'}
                 fill
                 className="object-cover"
@@ -86,7 +97,7 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
           <div className="flex flex-col items-center space-y-2">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden relative border-2 border-cosmic-pink shadow-cosmic-rose">
               <Image
-                src={partnerProfile.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80'}
+                src={photoB}
                 alt={partnerProfile.firstName}
                 fill
                 className="object-cover"

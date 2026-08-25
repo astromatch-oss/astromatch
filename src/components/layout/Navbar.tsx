@@ -9,6 +9,7 @@ import { useMatch } from '@/context/MatchContext';
 import { useChat } from '@/context/ChatContext';
 import { Sparkles, Heart, Compass, ShieldAlert, User, LogOut, Crown, Zap, MessageCircle } from 'lucide-react';
 import { AstrologyBadge } from '../astrology/AstrologyBadge';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -134,7 +135,7 @@ export const Navbar: React.FC = () => {
                 <div className="w-7 h-7 rounded-full overflow-hidden relative bg-surface-200 border border-white/20">
                   {profile?.profilePhotos?.[0] ? (
                     <Image
-                      src={profile.profilePhotos[0]}
+                      src={getOptimizedImageUrl(profile.profilePhotos[0], { width: 56, quality: 75 })}
                       alt={profile.firstName || 'Profile'}
                       fill
                       className="object-cover"

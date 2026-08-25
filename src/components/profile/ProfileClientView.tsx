@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ import { MOCK_DISCOVER_PROFILES } from '@/lib/mockData';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
-import { ReportModal } from '@/components/safety/ReportModal';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   ArrowLeft,
   Heart,
@@ -19,6 +20,11 @@ import {
   ShieldAlert,
   Compass,
 } from 'lucide-react';
+
+const ReportModal = dynamic(
+  () => import('@/components/safety/ReportModal').then((mod) => mod.ReportModal),
+  { ssr: false }
+);
 
 export function ProfileClientView({ targetId }: { targetId: string }) {
   const router = useRouter();
@@ -29,6 +35,7 @@ export function ProfileClientView({ targetId }: { targetId: string }) {
 
   const profile = MOCK_DISCOVER_PROFILES.find((p) => p.userId === targetId) || MOCK_DISCOVER_PROFILES[0];
   const synastry = astrologyService.calculateSynastry(myProfile || { sunSign: 'Scorpio' }, profile);
+  const heroPhoto = getOptimizedImageUrl(profile.profilePhotos[0], { width: 768, quality: 80 });
 
   return (
     <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
@@ -55,7 +62,7 @@ export function ProfileClientView({ targetId }: { targetId: string }) {
       <div className="bg-surface-200/90 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl space-y-6">
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/9]">
           <Image
-            src={profile.profilePhotos[0]}
+            src={heroPhoto}
             alt={profile.firstName}
             fill
             priority
@@ -175,16 +182,18 @@ export function ProfileClientView({ targetId }: { targetId: string }) {
         </div>
       </div>
 
-      {/* Safety Modal */}
-      <ReportModal
-        profile={profile}
-        isOpen={showReportModal}
-        onClose={() => setShowReportModal(false)}
-        onSubmitReport={async (uid, reason, details) => {
-          await reportProfile(uid, reason, details);
-          router.push('/discover');
-        }}
-      />
+      {/* Safety Modal (Lazy Loaded) */}
+      {showReportModal && (
+        <ReportModal
+          profile={profile}
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          onSubmitReport={async (uid, reason, details) => {
+            await reportProfile(uid, reason, details);
+            router.push('/discover');
+          }}
+        />
+      )}
     </div>
   );
 }

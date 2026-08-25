@@ -1,24 +1,24 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/AuthContext';
 import { SubscriptionTier } from '@/types/user';
-import { CheckoutModal } from '@/components/subscription/CheckoutModal';
 import {
   Sparkles,
   Check,
   Zap,
   Crown,
-  Star,
-  Shield,
-  HelpCircle,
-  ArrowRight,
-  Flame,
-  Heart,
 } from 'lucide-react';
 
+// Lazy-load CheckoutModal to avoid pulling Stripe/Payment components into initial bundle
+const CheckoutModal = dynamic(
+  () => import('@/components/subscription/CheckoutModal').then((mod) => mod.CheckoutModal),
+  { ssr: false }
+);
+
 export default function PricingPage() {
-  const { user, subscriptionTier, upgradeSubscriptionTier } = useAuth();
+  const { user, subscriptionTier } = useAuth();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('vip');
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -251,22 +251,24 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Checkout Modal */}
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        tier={selectedTier}
-        billingCycle={billingCycle}
-        price={
-          selectedTier === 'vip'
-            ? billingCycle === 'yearly'
-              ? '$239.88'
-              : '$29.99'
-            : billingCycle === 'yearly'
-            ? '$119.88'
-            : '$14.99'
-        }
-      />
+      {/* Checkout Modal (Lazy-Loaded) */}
+      {isCheckoutOpen && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          tier={selectedTier}
+          billingCycle={billingCycle}
+          price={
+            selectedTier === 'vip'
+              ? billingCycle === 'yearly'
+                ? '$239.88'
+                : '$29.99'
+              : billingCycle === 'yearly'
+              ? '$119.88'
+              : '$14.99'
+          }
+        />
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { AstrologyBadge } from '../astrology/AstrologyBadge';
 import { CompatibilityMeter } from '../astrology/CompatibilityMeter';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   Heart,
   X,
@@ -88,7 +89,7 @@ export const DiscoverCard: React.FC<DiscoverCardProps> = ({
       {/* Background Photo */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={photos[activePhotoIdx]}
+          src={getOptimizedImageUrl(photos[activePhotoIdx], { width: 640, quality: 80 })}
           alt={profile.firstName}
           fill
           priority

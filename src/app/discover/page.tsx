@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -10,10 +11,9 @@ import { AstrologicalElement } from '@/types/astrology';
 import { ZODIAC_SIGNS } from '@/lib/astrology/zodiacData';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { DiscoverCard } from '@/components/discover/DiscoverCard';
-import { MatchModal } from '@/components/discover/MatchModal';
-import { ReportModal } from '@/components/safety/ReportModal';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   Sparkles,
   RefreshCw,
@@ -23,12 +23,22 @@ import {
   LayoutGrid,
   Layers,
   X,
-  Star,
   Flame,
   Droplets,
   Wind,
   Mountain,
 } from 'lucide-react';
+
+// Lazy load modals for reduced mobile bundle weight
+const MatchModal = dynamic(
+  () => import('@/components/discover/MatchModal').then((mod) => mod.MatchModal),
+  { ssr: false }
+);
+
+const ReportModal = dynamic(
+  () => import('@/components/safety/ReportModal').then((mod) => mod.ReportModal),
+  { ssr: false }
+);
 
 export default function DiscoverPage() {
   const { user, profile: currentUserProfile, loginAsDemoUser } = useAuth();
@@ -171,9 +181,13 @@ export default function DiscoverPage() {
               {nextProfile && (
                 <div className="absolute inset-0 scale-[0.94] translate-y-3 opacity-40 blur-[1px] pointer-events-none rounded-3xl overflow-hidden border border-white/10 bg-surface-300 z-0">
                   <Image
-                    src={nextProfile.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'}
+                    src={getOptimizedImageUrl(
+                      nextProfile.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+                      { width: 480, quality: 70 }
+                    )}
                     alt="Next profile"
                     fill
+                    loading="lazy"
                     className="object-cover"
                   />
                 </div>
@@ -295,6 +309,11 @@ export default function DiscoverPage() {
                 currentUserProfile || { sunSign: 'Scorpio' },
                 p
               );
+              const optimizedGridPhoto = getOptimizedImageUrl(
+                p.profilePhotos[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+                { width: 450, quality: 75 }
+              );
+
               return (
                 <div
                   key={p.userId}
@@ -302,9 +321,10 @@ export default function DiscoverPage() {
                 >
                   <div className="relative aspect-[4/3.8] overflow-hidden">
                     <Image
-                      src={p.profilePhotos[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80'}
+                      src={optimizedGridPhoto}
                       alt={p.firstName}
                       fill
+                      loading="lazy"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-surface-400 via-transparent to-black/30" />
@@ -366,21 +386,25 @@ export default function DiscoverPage() {
         </div>
       )}
 
-      {/* Mutual Match Modal */}
-      <MatchModal
-        matchData={newMatchModalData}
-        onClose={closeMatchModal}
-      />
+      {/* Mutual Match Modal (Lazy Loaded) */}
+      {newMatchModalData && (
+        <MatchModal
+          matchData={newMatchModalData}
+          onClose={closeMatchModal}
+        />
+      )}
 
-      {/* Report Modal */}
-      <ReportModal
-        profile={reportingProfile}
-        isOpen={Boolean(reportingProfile)}
-        onClose={() => setReportingProfile(null)}
-        onSubmitReport={async (userId, reason, details) => {
-          await reportProfile(userId, reason, details);
-        }}
-      />
+      {/* Report Modal (Lazy Loaded) */}
+      {reportingProfile && (
+        <ReportModal
+          profile={reportingProfile}
+          isOpen={Boolean(reportingProfile)}
+          onClose={() => setReportingProfile(null)}
+          onSubmitReport={async (userId, reason, details) => {
+            await reportProfile(userId, reason, details);
+          }}
+        />
+      )}
     </div>
   );
 }

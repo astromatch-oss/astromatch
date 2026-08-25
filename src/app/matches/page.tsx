@@ -6,9 +6,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useMatch } from '@/context/MatchContext';
-import { Sparkles, MessageCircle, Heart, Clock, Compass } from 'lucide-react';
+import { Sparkles, Heart, Clock } from 'lucide-react';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { ZodiacSign } from '@/types/astrology';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 
 export default function MatchesPage() {
   const router = useRouter();
@@ -56,6 +57,7 @@ export default function MatchesPage() {
                 sunSign: 'Pisces',
                 age: 25,
               };
+              const optimizedPhoto = getOptimizedImageUrl(partner.photo, { width: 96, quality: 75 });
 
               return (
                 <button
@@ -66,9 +68,10 @@ export default function MatchesPage() {
                   <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full p-0.5 bg-gradient-to-tr from-cosmic-purple via-cosmic-pink to-amber-300 group-hover:scale-105 transition-transform duration-200 shadow-cosmic">
                     <div className="w-full h-full rounded-full overflow-hidden relative border-2 border-surface-300">
                       <Image
-                        src={partner.photo}
+                        src={optimizedPhoto}
                         alt={partner.firstName}
                         fill
+                        loading="lazy"
                         className="object-cover pointer-events-none"
                         sizes="72px"
                       />
@@ -123,6 +126,7 @@ export default function MatchesPage() {
 
               const hasUnread = (match.unreadCount?.[myId] || 0) > 0;
               const lastMsgText = match.lastMessage?.text || 'Connected under the stars ✨';
+              const optimizedPhoto = getOptimizedImageUrl(partner.photo, { width: 112, quality: 75 });
 
               return (
                 <button
@@ -133,9 +137,10 @@ export default function MatchesPage() {
                   <div className="flex items-center gap-3.5 min-w-0 pointer-events-none">
                     <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl overflow-hidden relative flex-shrink-0 border border-white/10">
                       <Image
-                        src={partner.photo}
+                        src={optimizedPhoto}
                         alt={partner.firstName}
                         fill
+                        loading="lazy"
                         className="object-cover pointer-events-none"
                         sizes="56px"
                       />

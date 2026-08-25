@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,10 +10,7 @@ import { useMatch } from '@/context/MatchContext';
 import { useChat } from '@/context/ChatContext';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
-import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
-import { ReportModal } from '@/components/safety/ReportModal';
-import { SynastryModal } from '@/components/chat/SynastryModal';
-import { MercuryRetrogradeModal } from '@/components/chat/MercuryRetrogradeModal';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import { RetrogradePrompt } from '@/lib/astrology/retrogradeData';
 import {
   ArrowLeft,
@@ -29,9 +27,24 @@ import {
   MessageCircle,
   User,
   RotateCcw,
-  Orbit,
 } from 'lucide-react';
 import { ZodiacSign } from '@/types/astrology';
+
+// Dynamic lazy loaded modals to minimize initial bundle size on mobile
+const SynastryModal = dynamic(
+  () => import('@/components/chat/SynastryModal').then((mod) => mod.SynastryModal),
+  { ssr: false }
+);
+
+const MercuryRetrogradeModal = dynamic(
+  () => import('@/components/chat/MercuryRetrogradeModal').then((mod) => mod.MercuryRetrogradeModal),
+  { ssr: false }
+);
+
+const ReportModal = dynamic(
+  () => import('@/components/safety/ReportModal').then((mod) => mod.ReportModal),
+  { ssr: false }
+);
 
 const QUICK_EMOJIS = ['✨', '💫', '🌙', '🪐', '💖', '🔥', '☕', '🌟'];
 
@@ -219,6 +232,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                   sunSign: 'Pisces',
                 };
                 const isCurrent = m.id === selectedMatchId;
+                const optimizedPhoto = getOptimizedImageUrl(p.photo, { width: 96, quality: 75 });
 
                 return (
                   <button
@@ -238,9 +252,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                     >
                       <div className="w-12 h-12 rounded-full overflow-hidden relative border-2 border-surface-300 pointer-events-none">
                         <Image
-                          src={p.photo}
+                          src={optimizedPhoto}
                           alt={p.firstName}
                           fill
+                          loading="lazy"
                           className="object-cover pointer-events-none"
                           sizes="48px"
                         />
@@ -286,6 +301,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                 (msg) => msg.receiverId === myId && !msg.read
               ).length;
               const isSelected = m.id === selectedMatchId;
+              const optimizedPhoto = getOptimizedImageUrl(p.photo, { width: 96, quality: 75 });
 
               return (
                 <button
@@ -303,9 +319,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                   <div className="flex items-center gap-3 min-w-0 pointer-events-none">
                     <div className="w-12 h-12 rounded-xl overflow-hidden relative flex-shrink-0 border border-white/10 pointer-events-none">
                       <Image
-                        src={p.photo}
+                        src={optimizedPhoto}
                         alt={p.firstName}
                         fill
+                        loading="lazy"
                         className="object-cover pointer-events-none"
                         sizes="48px"
                       />
@@ -371,7 +388,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden relative border border-white/20">
                     <Image
-                      src={partner.photo}
+                      src={getOptimizedImageUrl(partner.photo, { width: 80, quality: 80 })}
                       alt={partner.firstName}
                       fill
                       className="object-cover pointer-events-none"
@@ -544,15 +561,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                 );
               })}
 
-              {/* Partner Typing Indicator */}
-              {isTyping && (
-                <div className="flex items-center gap-2 p-3 bg-surface-100 border border-white/10 rounded-2xl rounded-bl-sm max-w-[140px] animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-cosmic-purple animate-bounce" />
-                  <span className="w-2 h-2 rounded-full bg-cosmic-pink animate-bounce delay-150" />
-                  <span className="w-2 h-2 rounded-full bg-amber-300 animate-bounce delay-300" />
-                </div>
-              )}
-
               <div ref={messagesEndRef} />
             </div>
 
@@ -651,8 +659,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
         )}
       </div>
 
-      {/* Interactive Mercury Retrograde Modal */}
-      {selectedMatchId && (
+      {/* Interactive Lazy-Loaded Mercury Retrograde Modal */}
+      {selectedMatchId && showRetrogradeModal && (
         <MercuryRetrogradeModal
           isOpen={showRetrogradeModal}
           onClose={() => setShowRetrogradeModal(false)}
@@ -661,8 +669,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
         />
       )}
 
-      {/* Interactive Synastry Breakdown Modal */}
-      {selectedMatchId && (
+      {/* Interactive Lazy-Loaded Synastry Breakdown Modal */}
+      {selectedMatchId && showSynastryModal && (
         <SynastryModal
           isOpen={showSynastryModal}
           onClose={() => setShowSynastryModal(false)}
@@ -677,16 +685,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
         />
       )}
 
-      {/* Safety Report Modal */}
-      <ReportModal
-        profile={{ userId: partnerId, firstName: partner.firstName } as any}
-        isOpen={showReportModal}
-        onClose={() => setShowReportModal(false)}
-        onSubmitReport={async (uid, reason, details) => {
-          await reportProfile(uid, reason, details);
-          setSelectedMatchId(null);
-        }}
-      />
+      {/* Lazy-Loaded Safety Report Modal */}
+      {showReportModal && (
+        <ReportModal
+          profile={{ userId: partnerId, firstName: partner.firstName } as any}
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          onSubmitReport={async (uid, reason, details) => {
+            await reportProfile(uid, reason, details);
+            setSelectedMatchId(null);
+          }}
+        />
+      )}
     </div>
   );
 };

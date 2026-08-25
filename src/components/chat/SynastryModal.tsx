@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { UserProfile } from '@/types/user';
 import { CompatibilityResult, ZodiacSign } from '@/types/astrology';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   Sparkles,
   Heart,
@@ -39,13 +40,16 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
   if (!isOpen) return null;
 
   // High-quality, photo-realistic portrait photographs of real people
-  const photoA =
+  const rawPhotoA =
     userA.profilePhotos?.[0] ||
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80';
-  const photoB =
+  const rawPhotoB =
     partner.profilePhotos?.[0] ||
     (partner as any).photo ||
     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80';
+
+  const photoA = getOptimizedImageUrl(rawPhotoA, { width: 176, quality: 80 });
+  const photoB = getOptimizedImageUrl(rawPhotoB, { width: 176, quality: 80 });
 
   const nameA = userA.firstName || 'Aria';
   const nameB = partner.firstName || 'Elena';

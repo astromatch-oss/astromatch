@@ -94,24 +94,10 @@ export function ChatClientView({ matchId }: { matchId: string }) {
     setInputMessage('');
     setShowEmojiPicker(false);
     await sendMessage(matchId, partnerId, text, 'text');
-
-    // Simulate partner typing indicator for lively chat feedback
-    setTimeout(() => {
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2400);
-    }, 800);
   };
 
   const handleSendIcebreaker = async (prompt: string) => {
     await sendMessage(matchId, partnerId, prompt, 'icebreaker');
-    setTimeout(() => {
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2400);
-    }, 800);
   };
 
   const handleEmojiClick = (emoji: string) => {

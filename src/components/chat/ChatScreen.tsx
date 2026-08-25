@@ -152,42 +152,17 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
     setInputMessage('');
     setShowEmojiPicker(false);
     await sendMessage(selectedMatchId, partnerId, text, 'text');
-
-    // Simulate partner typing feedback
-    setTimeout(() => {
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2000);
-    }, 600);
   };
 
   const handleSendIcebreaker = async (prompt: string) => {
     if (!selectedMatchId) return;
     await sendMessage(selectedMatchId, partnerId, prompt, 'icebreaker');
-    setTimeout(() => {
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2000);
-    }, 600);
   };
 
   const handleSendRetrogradePrompt = async (prompt: RetrogradePrompt) => {
     if (!selectedMatchId) return;
     const fullText = `☿ [MERCURY RETROGRADE PLOT TWIST] ${prompt.prompt}`;
     await sendMessage(selectedMatchId, partnerId, fullText, 'retrograde');
-
-    // Simulate partner typing and dynamic response under retrograde influence
-    setTimeout(() => {
-      setIsTyping(true);
-      setTimeout(async () => {
-        setIsTyping(false);
-        const randomReply =
-          prompt.suggestedReplies[Math.floor(Math.random() * prompt.suggestedReplies.length)];
-        await sendMessage(selectedMatchId, myId, randomReply, 'text');
-      }, 2400);
-    }, 800);
   };
 
   const handleEmojiClick = (emoji: string) => {

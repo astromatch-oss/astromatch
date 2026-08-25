@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ChatMessage } from '@/types/chat';
-import { MOCK_INITIAL_MESSAGES, MOCK_DISCOVER_PROFILES } from '@/lib/mockData';
+import { MOCK_INITIAL_MESSAGES } from '@/lib/mockData';
 import { useAuth } from './AuthContext';
 import { sendChatMessage, subscribeToMatchMessages } from '@/lib/firestoreService';
-import { ZodiacSign } from '@/types/astrology';
 
 interface ChatContextType {
   messages: Record<string, ChatMessage[]>;
@@ -20,51 +19,6 @@ interface ChatContextType {
   activeMatchId: string | null;
   setActiveMatchId: (id: string | null) => void;
   unreadTotalCount: number;
-}
-
-const ZODIAC_RESPONSES: Record<string, string[]> = {
-  Fire: [
-    "I love this bold energy! What's the wildest adventure on your bucket list? 🔥",
-    "Spontaneous sparks are my favorite kind of astrology! Let's grab coffee soon ☕",
-    "That passion really speaks to my chart. Tell me more!",
-  ],
-  Earth: [
-    "There's something deeply comforting and grounded about our connection 🌿",
-    "I appreciate genuine sincerity so much. What's your favorite way to unwind?",
-    "A solid foundation starts with good conversations like this ✨",
-  ],
-  Air: [
-    "Our minds are definitely on the same intellectual wavelength 💨",
-    "Haha, that's such a sharp observation! What other mysteries are you curious about?",
-    "Endless curiosity and late-night philosophy—count me in! 🌟",
-  ],
-  Water: [
-    "I felt that intuition immediately. The emotional resonance between us is so rare 🌊",
-    "There is a deep poetic beauty in how our charts align 🌙",
-    "You have a really magnetic presence. I'd love to get to know your world better 💫",
-  ],
-};
-
-function getElementForSign(sign?: ZodiacSign | string): 'Fire' | 'Earth' | 'Air' | 'Water' {
-  switch (sign) {
-    case 'Aries':
-    case 'Leo':
-    case 'Sagittarius':
-      return 'Fire';
-    case 'Taurus':
-    case 'Virgo':
-    case 'Capricorn':
-      return 'Earth';
-    case 'Gemini':
-    case 'Libra':
-    case 'Aquarius':
-      return 'Air';
-    case 'Cancer':
-    case 'Scorpio':
-    case 'Pisces':
-    default:
-      return 'Water';
-  }
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -135,7 +89,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       type,
     };
 
-    // 1. Optimistic update and state persistence
+    // 1. Direct state update and local storage persistence
     const currentList = messages[matchId] || [];
     const updatedList = [...currentList, newMsg];
     const updatedMap = {
@@ -148,35 +102,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('astromatch_messages', JSON.stringify(updatedMap));
     }
 
-    // 2. Persist to Firestore
+    // 2. Persist directly to Firestore (real two-way communication without automated replies)
     await sendChatMessage(matchId, newMsg);
-
-    // 3. Simulated Celestial Auto-Reply for demo & mock profiles
-    const partnerProfile = MOCK_DISCOVER_PROFILES.find((p) => p.userId === receiverId);
-    const element = getElementForSign(partnerProfile?.sunSign);
-    const pool = ZODIAC_RESPONSES[element] || ZODIAC_RESPONSES['Water'];
-    const randomReply = pool[Math.floor(Math.random() * pool.length)];
-
-    setTimeout(() => {
-      const replyMsg: ChatMessage = {
-        id: `reply-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-        matchId,
-        senderId: receiverId,
-        receiverId: senderId,
-        text: randomReply,
-        createdAt: new Date().toISOString(),
-        read: false,
-      };
-
-      setMessages((prev) => {
-        const nextList = [...(prev[matchId] || []), replyMsg];
-        const nextMap = { ...prev, [matchId]: nextList };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('astromatch_messages', JSON.stringify(nextMap));
-        }
-        return nextMap;
-      });
-    }, 2200);
   };
 
   const markAsRead = (matchId: string) => {

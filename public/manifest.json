@@ -1,0 +1,62 @@
+{
+  "name": "AstroMatch - Cosmic Dating",
+  "short_name": "AstroMatch",
+  "description": "Find your celestial match through birth chart harmony, synastry, and deep cosmic connection.",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090A10",
+  "theme_color": "#7C3AED",
+  "categories": ["dating", "lifestyle", "social"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Discover Matches",
+      "short_name": "Discover",
+      "description": "Explore celestial compatibility profiles",
+      "url": "/discover",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Matches",
+      "short_name": "Matches",
+      "description": "View and message your cosmic connections",
+      "url": "/matches",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Celestial Hub",
+      "short_name": "Hub",
+      "description": "Check daily astrological transits",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

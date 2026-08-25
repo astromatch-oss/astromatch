@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="cosmic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#080911" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#0D0F1D"/>
+  <circle cx="256" cy="256" r="220" fill="url(#glow)" opacity="0.5"/>
+  <circle cx="256" cy="256" r="180" stroke="url(#cosmic-grad)" stroke-width="4" stroke-dasharray="8 8" opacity="0.6"/>
+  <!-- Constellation heart & celestial symbol -->
+  <path d="M256 160 C210 100 130 130 130 210 C130 290 256 380 256 380 C256 380 382 290 382 210 C382 130 302 100 256 160 Z" 
+        fill="none" stroke="url(#cosmic-grad)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Star nodes -->
+  <circle cx="256" cy="160" r="10" fill="#FDE047"/>
+  <circle cx="170" cy="150" r="7" fill="#F43F5E"/>
+  <circle cx="342" cy="150" r="7" fill="#8B5CF6"/>
+  <circle cx="130" cy="210" r="8" fill="#EC4899"/>
+  <circle cx="382" cy="210" r="8" fill="#7C3AED"/>
+  <circle cx="256" cy="380" r="12" fill="#F59E0B"/>
+  <circle cx="256" cy="245" r="14" fill="#FDE047" opacity="0.9"/>
+  <line x1="256" y1="215" x2="256" y2="275" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <line x1="226" y1="245" x2="286" y2="245" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+</svg>

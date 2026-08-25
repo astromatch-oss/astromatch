@@ -14,7 +14,7 @@ interface ChatContextType {
     matchId: string,
     receiverId: string,
     text: string,
-    type?: 'text' | 'icebreaker' | 'astrology_prompt'
+    type?: 'text' | 'icebreaker' | 'astrology_prompt' | 'retrograde'
   ) => Promise<void>;
   markAsRead: (matchId: string) => void;
   activeMatchId: string | null;
@@ -121,7 +121,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     matchId: string,
     receiverId: string,
     text: string,
-    type: 'text' | 'icebreaker' | 'astrology_prompt' = 'text'
+    type: 'text' | 'icebreaker' | 'astrology_prompt' | 'retrograde' = 'text'
   ) => {
     const senderId = myId;
     const newMsg: ChatMessage = {

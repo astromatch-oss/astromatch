@@ -7,7 +7,7 @@ export interface ChatMessage {
   createdAt: string;
   read: boolean;
   readAt?: string;
-  type?: 'text' | 'icebreaker' | 'astrology_prompt';
+  type?: 'text' | 'icebreaker' | 'astrology_prompt' | 'retrograde';
 }
 
 export interface ConversationParticipant {

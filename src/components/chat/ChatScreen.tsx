@@ -12,6 +12,8 @@ import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
 import { ReportModal } from '@/components/safety/ReportModal';
 import { SynastryModal } from '@/components/chat/SynastryModal';
+import { MercuryRetrogradeModal } from '@/components/chat/MercuryRetrogradeModal';
+import { RetrogradePrompt } from '@/lib/astrology/retrogradeData';
 import {
   ArrowLeft,
   Send,
@@ -23,11 +25,11 @@ import {
   MoreVertical,
   Heart,
   Smile,
-  ChevronDown,
-  ChevronUp,
   Search,
   MessageCircle,
   User,
+  RotateCcw,
+  Orbit,
 } from 'lucide-react';
 import { ZodiacSign } from '@/types/astrology';
 
@@ -52,8 +54,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSynastryModal, setShowSynastryModal] = useState(false);
+  const [showRetrogradeModal, setShowRetrogradeModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [showSynastryDrawer, setShowSynastryDrawer] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -99,7 +101,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
     age: number;
     profilePhotos?: string[];
   } = (activeMatch?.profiles?.[partnerId] || {
-    firstName: 'Celestial Match',
+    firstName: 'Elena',
     photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
     sunSign: 'Pisces' as ZodiacSign,
     moonSign: 'Cancer' as ZodiacSign,
@@ -169,6 +171,23 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
         setIsTyping(false);
       }, 2000);
     }, 600);
+  };
+
+  const handleSendRetrogradePrompt = async (prompt: RetrogradePrompt) => {
+    if (!selectedMatchId) return;
+    const fullText = `☿ [MERCURY RETROGRADE PLOT TWIST] ${prompt.prompt}`;
+    await sendMessage(selectedMatchId, partnerId, fullText, 'retrograde');
+
+    // Simulate partner typing and dynamic response under retrograde influence
+    setTimeout(() => {
+      setIsTyping(true);
+      setTimeout(async () => {
+        setIsTyping(false);
+        const randomReply =
+          prompt.suggestedReplies[Math.floor(Math.random() * prompt.suggestedReplies.length)];
+        await sendMessage(selectedMatchId, myId, randomReply, 'text');
+      }, 2400);
+    }, 800);
   };
 
   const handleEmojiClick = (emoji: string) => {
@@ -380,7 +399,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                       src={partner.photo}
                       alt={partner.firstName}
                       fill
-                      className="object-cover"
+                      className="object-cover pointer-events-none"
                       sizes="40px"
                     />
                   </div>
@@ -402,13 +421,25 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-2 relative">
+                {/* Mercury Retrograde Button */}
+                <button
+                  onClick={() => setShowRetrogradeModal(true)}
+                  className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 transition-all shadow-cosmic-gold hover:scale-105"
+                  title="Trigger Mercury Retrograde Plot Twist"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
+                  <span className="hidden sm:inline">Mercury Retrograde</span>
+                  <span className="sm:hidden">☿ Retrograde</span>
+                </button>
+
+                {/* Synastry Blueprint Button */}
                 <button
                   onClick={() => setShowSynastryModal(true)}
                   className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-cosmic hover:scale-105"
                   title="Open Interactive Synastry Breakdown"
                 >
-                  <Compass className="w-3.5 h-3.5 text-amber-300 animate-spin-slow" />
-                  <span>Synastry</span>
+                  <Compass className="w-3.5 h-3.5 text-purple-300" />
+                  <span className="hidden sm:inline">Synastry</span>
                 </button>
 
                 <button
@@ -420,7 +451,17 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
 
                 {/* Safety and Profile menu dropdown */}
                 {showMenu && (
-                  <div className="absolute right-0 top-11 w-48 bg-surface-100 border border-white/10 rounded-2xl shadow-xl p-1.5 z-30 space-y-1 animate-in fade-in zoom-in-95">
+                  <div className="absolute right-0 top-11 w-52 bg-surface-100 border border-white/10 rounded-2xl shadow-xl p-1.5 z-30 space-y-1 animate-in fade-in zoom-in-95">
+                    <button
+                      onClick={() => {
+                        setShowMenu(false);
+                        setShowRetrogradeModal(true);
+                      }}
+                      className="w-full text-left px-3 py-2 text-xs font-medium text-amber-300 hover:bg-surface-50 rounded-xl flex items-center gap-2"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Mercury Retrograde Twist</span>
+                    </button>
                     <button
                       onClick={() => {
                         setShowMenu(false);
@@ -428,24 +469,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                       }}
                       className="w-full text-left px-3 py-2 text-xs font-medium text-purple-300 hover:bg-surface-50 rounded-xl flex items-center gap-2"
                     >
-                      <Compass className="w-3.5 h-3.5 text-amber-300" />
+                      <Compass className="w-3.5 h-3.5 text-purple-300" />
                       <span>Synastry Blueprint</span>
                     </button>
-                    <Link
-                      href={`/profile/${partnerId}`}
-                      onClick={() => setShowMenu(false)}
-                      className="w-full text-left px-3 py-2 text-xs font-medium text-white hover:bg-surface-50 rounded-xl flex items-center gap-2"
-                    >
-                      <User className="w-3.5 h-3.5 text-purple-300" />
-                      <span>View Full Profile</span>
-                    </Link>
                     <Link
                       href={`/compatibility/${partnerId}`}
                       onClick={() => setShowMenu(false)}
                       className="w-full text-left px-3 py-2 text-xs font-medium text-white hover:bg-surface-50 rounded-xl flex items-center gap-2"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                      <span>Full Synastry Page</span>
+                      <span>Full Compatibility Report</span>
                     </Link>
                     <button
                       onClick={() => {
@@ -477,6 +510,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
               {/* Message List */}
               {activeMessages.map((msg) => {
                 const isMine = msg.senderId === myId;
+                const isRetrograde = msg.type === 'retrograde' || msg.text.startsWith('☿ [MERCURY RETROGRADE');
                 const time = new Date(msg.createdAt).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -488,19 +522,35 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
                     className={`flex flex-col ${isMine ? 'items-end' : 'items-start'} space-y-1 animate-in fade-in duration-200`}
                   >
                     <div
-                      className={`max-w-[85%] sm:max-w-[70%] p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
-                        isMine
+                      className={`max-w-[85%] sm:max-w-[75%] p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                        isRetrograde
+                          ? 'bg-gradient-to-tr from-amber-500/20 via-surface-100 to-purple-500/20 border-2 border-amber-500/50 shadow-cosmic-gold text-white rounded-2xl'
+                          : isMine
                           ? 'bg-gradient-to-r from-cosmic-purple to-cosmic-violet text-white rounded-br-sm shadow-cosmic'
                           : 'bg-surface-100 border border-white/10 text-white rounded-bl-sm'
                       }`}
                     >
-                      {msg.type === 'icebreaker' && (
-                        <div className="flex items-center gap-1 text-[11px] text-amber-300 font-semibold mb-1">
-                          <Sparkles className="w-3 h-3" />
-                          <span>Cosmic Synastry Insight</span>
+                      {isRetrograde ? (
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-1.5 text-[11px] text-amber-300 font-extrabold uppercase tracking-wider bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30 w-fit">
+                            <RotateCcw className="w-3 h-3 text-amber-400 animate-spin-slow" />
+                            <span>Mercury Retrograde Plot Twist</span>
+                          </div>
+                          <p className="font-medium text-white/95 leading-relaxed">
+                            {msg.text.replace('☿ [MERCURY RETROGRADE PLOT TWIST] ', '')}
+                          </p>
                         </div>
+                      ) : (
+                        <>
+                          {msg.type === 'icebreaker' && (
+                            <div className="flex items-center gap-1 text-[11px] text-amber-300 font-semibold mb-1">
+                              <Sparkles className="w-3 h-3" />
+                              <span>Cosmic Synastry Insight</span>
+                            </div>
+                          )}
+                          <p className="break-words">{msg.text}</p>
+                        </>
                       )}
-                      <p className="break-words">{msg.text}</p>
                     </div>
 
                     <div className="flex items-center gap-1 text-[10px] text-text-muted px-1">
@@ -531,23 +581,29 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Icebreaker Prompts Carousel */}
-            <div className="px-4 py-2 border-t border-white/5 bg-surface-300/60">
-              <div className="flex items-center gap-1.5 text-[11px] font-semibold text-cosmic-purple mb-1">
-                <Sparkles className="w-3 h-3 text-amber-300" />
-                <span>Cosmic Icebreakers:</span>
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
-                {icebreakers.slice(0, 4).map((prompt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSendIcebreaker(prompt)}
-                    className="text-xs px-3 py-1.5 rounded-xl bg-surface-100 hover:bg-surface-50 border border-white/10 text-text-secondary hover:text-white whitespace-nowrap transition-colors flex-shrink-0"
-                  >
-                    💫 {prompt}
-                  </button>
-                ))}
-              </div>
+            {/* Quick Actions & Carousel Bar */}
+            <div className="px-4 py-2 border-t border-white/5 bg-surface-300/60 flex items-center gap-2 overflow-x-auto custom-scrollbar">
+              {/* Mercury Retrograde Quick Trigger Chip */}
+              <button
+                onClick={() => setShowRetrogradeModal(true)}
+                className="text-xs px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 font-bold whitespace-nowrap transition-all shadow-cosmic-gold flex items-center gap-1.5 flex-shrink-0 hover:scale-105"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
+                <span>☿ Retrograde Plot Twist</span>
+              </button>
+
+              <div className="h-4 w-px bg-white/10 flex-shrink-0" />
+
+              {/* Icebreaker Prompts */}
+              {icebreakers.slice(0, 3).map((prompt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSendIcebreaker(prompt)}
+                  className="text-xs px-3 py-1.5 rounded-xl bg-surface-100 hover:bg-surface-50 border border-white/10 text-text-secondary hover:text-white whitespace-nowrap transition-colors flex-shrink-0"
+                >
+                  💫 {prompt}
+                </button>
+              ))}
             </div>
 
             {/* Emoji Quick Picker */}
@@ -619,6 +675,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
           </div>
         )}
       </div>
+
+      {/* Interactive Mercury Retrograde Modal */}
+      {selectedMatchId && (
+        <MercuryRetrogradeModal
+          isOpen={showRetrogradeModal}
+          onClose={() => setShowRetrogradeModal(false)}
+          partnerName={partner.firstName}
+          onSendToChat={handleSendRetrogradePrompt}
+        />
+      )}
 
       {/* Interactive Synastry Breakdown Modal */}
       {selectedMatchId && (

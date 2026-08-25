@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Sparkles, Mail, Lock, ArrowRight, AlertCircle, Stars } from 'lucide-react';
+import { Sparkles, Mail, Lock, ArrowRight, AlertCircle, Stars, ShieldCheck } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -62,39 +62,39 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-surface-200/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-cosmic-purple to-cosmic-pink shadow-cosmic text-white mb-2">
-            <Stars className="w-6 h-6 text-amber-300" />
+    <div className="flex-1 min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-8 sm:py-12">
+      <div className="w-full max-w-md mx-auto bg-surface-200/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        {/* Header - Centered */}
+        <div className="text-center space-y-2.5">
+          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-cosmic-purple to-cosmic-pink shadow-cosmic text-white mx-auto">
+            <Stars className="w-6 h-6 text-amber-300 animate-pulse" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-            Begin Your Celestial Journey
+            Begin Your Journey
           </h1>
-          <p className="text-xs sm:text-sm text-text-secondary">
+          <p className="text-xs sm:text-sm text-text-secondary max-w-xs mx-auto leading-relaxed">
             Join the cosmic dating network and discover souls aligned with your stars
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+          <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs text-left animate-in fade-in">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
+            <span className="leading-snug">{error}</span>
           </div>
         )}
 
-        {/* 1-Click Demo Login */}
+        {/* 1-Click Instant Demo Login */}
         <button
           type="button"
           onClick={() => {
             loginAsDemoUser();
             router.push('/discover');
           }}
-          className="w-full py-3 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm"
+          className="w-full min-h-[44px] py-2.5 px-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-sm"
         >
-          <Sparkles className="w-4 h-4" />
+          <Sparkles className="w-4 h-4 text-amber-300" />
           <span>Skip & Try Instant Demo Mode</span>
         </button>
 
@@ -103,9 +103,9 @@ export default function SignupPage() {
           type="button"
           onClick={handleGoogleSignup}
           disabled={isLoading}
-          className="w-full py-3 px-4 rounded-xl bg-surface-100 hover:bg-surface-50 border border-white/10 text-white text-sm font-medium flex items-center justify-center gap-3 transition-colors disabled:opacity-50"
+          className="w-full min-h-[46px] py-2.5 px-4 rounded-2xl bg-surface-100 hover:bg-surface-50 border border-white/10 text-white text-sm font-medium flex items-center justify-center gap-3 transition-colors disabled:opacity-50"
         >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
             <path
               fill="#EA4335"
               d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"
@@ -126,7 +126,8 @@ export default function SignupPage() {
           <span>Sign up with Google</span>
         </button>
 
-        <div className="relative flex items-center justify-center">
+        {/* Divider */}
+        <div className="relative flex items-center justify-center py-1">
           <div className="border-t border-white/10 w-full" />
           <span className="bg-surface-200 px-3 text-[11px] text-text-muted uppercase tracking-wider font-semibold">
             Or with email
@@ -134,49 +135,49 @@ export default function SignupPage() {
           <div className="border-t border-white/10 w-full" />
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleEmailSignup} className="space-y-4">
+        {/* Email Signup Form */}
+        <form onSubmit={handleEmailSignup} className="space-y-4 text-left">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-text-secondary">Email Address</label>
+            <label className="text-xs font-semibold text-text-secondary block">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your.email@example.com"
-                className="w-full bg-surface-100 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple"
+                className="w-full bg-surface-100 border border-white/10 rounded-2xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-text-secondary">Password (Min. 6 chars)</label>
+            <label className="text-xs font-semibold text-text-secondary block">Password (Min. 6 chars)</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-surface-100 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple"
+                className="w-full bg-surface-100 border border-white/10 rounded-2xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-text-secondary">Confirm Password</label>
+            <label className="text-xs font-semibold text-text-secondary block">Confirm Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-surface-100 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple"
+                className="w-full bg-surface-100 border border-white/10 rounded-2xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-cosmic-purple transition-colors"
               />
             </div>
           </div>
@@ -184,20 +185,26 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-cosmic-purple to-cosmic-pink hover:opacity-90 text-white font-semibold text-sm shadow-cosmic transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full min-h-[48px] py-3.5 rounded-2xl bg-gradient-to-r from-cosmic-purple to-cosmic-pink hover:opacity-90 text-white font-semibold text-sm shadow-cosmic transition-all flex items-center justify-center gap-2 disabled:opacity-50 hover:scale-[1.01] active:scale-[0.99] mt-2"
           >
             <span>{isLoading ? 'Creating Account...' : 'Continue to Onboarding'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        {/* Footer Link */}
-        <p className="text-center text-xs text-text-secondary">
-          Already have an account?{' '}
-          <Link href="/login" className="text-cosmic-purple hover:underline font-semibold">
-            Sign In
-          </Link>
-        </p>
+        {/* Footer Link - Centered */}
+        <div className="pt-2 text-center border-t border-white/5 space-y-2">
+          <p className="text-xs text-text-secondary">
+            Already have an account?{' '}
+            <Link href="/login" className="text-cosmic-purple hover:text-purple-300 hover:underline font-semibold transition-colors">
+              Sign In
+            </Link>
+          </p>
+          <div className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>End-to-End Encrypted & Privacy Protected</span>
+          </div>
+        </div>
       </div>
     </div>
   );

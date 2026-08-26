@@ -14,9 +14,9 @@ export const MOCK_CURRENT_USER: UserProfile = {
   age: 26,
   bio: 'Scorpio Sun, Pisces Moon, Sagittarius Rising. Architect by day, stargazer & vinyl record hunter by night. Looking for someone with electric curiosity and emotional depth.',
   profilePhotos: [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
   ],
   location: {
     city: 'Paris',
@@ -51,8 +51,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 25,
     bio: 'Pisces Sun, Cancer Moon, Taurus Rising. Curator at an independent contemporary gallery. I believe in magnetic synchronicities, late night museum walks, and deep elemental conversations.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 3 },
     relationshipIntent: 'long-term',
@@ -78,8 +78,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 27,
     bio: 'Leo Sun, Aries Moon, Libra Rising. Music producer and sound designer. Warm fire energy with a deep love for acoustic instruments and spontaneous road trips into the mountains.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 5 },
     relationshipIntent: 'long-term',
@@ -105,8 +105,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 26,
     bio: 'Taurus Sun, Capricorn Moon, Virgo Rising. Landscape designer & botanical illustrator. Rooted, calm, and obsessed with creating secret garden sanctuaries.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 7 },
     relationshipIntent: 'long-term',
@@ -132,8 +132,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 28,
     bio: 'Scorpio Sun, Taurus Moon, Scorpio Rising. Astrophysics researcher. Fascinated by gravitational waves and the unspoken gravity between two minds.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 2 },
     relationshipIntent: 'long-term',
@@ -159,8 +159,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 24,
     bio: 'Aquarius Sun, Gemini Moon, Aries Rising. AI UX researcher. Unapologetically eccentric, high-energy intellectual debates, neon aesthetics, and synth-pop.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1488426862026-3ee34a7d66fc?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 8 },
     relationshipIntent: 'figuring-out',
@@ -186,8 +186,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 29,
     bio: 'Virgo Sun, Taurus Moon, Capricorn Rising. Earth architect specializing in sustainable timber structures. Passionate about sourdough baking, mid-century furniture, and quiet stargazing.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1480455624315-06be489e18f0?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 6 },
     relationshipIntent: 'marriage',
@@ -213,8 +213,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 27,
     bio: 'Libra Sun, Sagittarius Moon, Gemini Rising. Perfumer & scent designer. In search of balance, beauty, and someone who appreciates the nuance of notes and celestial alignments.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 4 },
     relationshipIntent: 'long-term',
@@ -240,8 +240,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 26,
     bio: 'Sagittarius Sun, Leo Moon, Aries Rising. Triple fire powerhouse! Documentary filmmaker telling stories of oceanic conservation. Adventure is non-negotiable.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 9 },
     relationshipIntent: 'long-term',
@@ -267,8 +267,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 28,
     bio: 'Aries Sun, Scorpio Moon, Leo Rising. Fashion creative director. Direct, passionate, and fiercely loyal. Let us build an empire or spend Sundays getting lost in bookstores.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 12 },
     relationshipIntent: 'marriage',
@@ -294,8 +294,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 25,
     bio: 'Gemini Sun, Aquarius Moon, Libra Rising. Triple Air intellectual. Generative artist and game writer. Endless curiosity, late-night tea ceremonies, and ambient techno.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 4 },
     relationshipIntent: 'figuring-out',
@@ -321,8 +321,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 27,
     bio: 'Cancer Sun, Pisces Moon, Cancer Rising. Cellist and composer. Intuitive, warm, and deeply protective of those I love. I speak the language of music and quiet understanding.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 3 },
     relationshipIntent: 'long-term',
@@ -348,8 +348,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 29,
     bio: 'Capricorn Sun, Virgo Moon, Scorpio Rising. Quantitative analyst with a secret passion for mountaineering and classical piano. Ambition balanced with steady loyalty.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1480455624315-06be489e18f0?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 6 },
     relationshipIntent: 'marriage',
@@ -375,8 +375,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 25,
     bio: 'Leo Sun, Sagittarius Moon, Libra Rising. Jewelry designer & gemologist. Golden hour lover, collector of ancient myths, and lover of warm desert nights.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 8 },
     relationshipIntent: 'long-term',
@@ -402,8 +402,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 28,
     bio: 'Aries Sun, Leo Moon, Sagittarius Rising. Triple Fire trail runner & adventure photographer. High enthusiasm, authentic presence, and an obsession with sunrise summits.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 11 },
     relationshipIntent: 'long-term',
@@ -429,8 +429,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 26,
     bio: 'Aquarius Sun, Libra Moon, Gemini Rising. Romantic Air archetype. Renaissance art historian and rare book restorer. Looking for someone with boundless intellect and kindness.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 4 },
     relationshipIntent: 'long-term',
@@ -456,8 +456,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 27,
     bio: 'Taurus Sun, Cancer Moon, Virgo Rising. Watchmaker and kinetic artist. Deeply sensual, appreciates fine craftsmanship, and loves cooking elaborate four-course dinners.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1480455624315-06be489e18f0?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 5 },
     relationshipIntent: 'marriage',
@@ -483,8 +483,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 24,
     bio: 'Scorpio Sun, Capricorn Moon, Pisces Rising. Scandinavian lighting designer. Magnetically quiet, dark humor, winter ocean dips, and passionate late night conversations.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 7 },
     relationshipIntent: 'long-term',
@@ -510,8 +510,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 29,
     bio: 'Gemini Sun, Aries Moon, Leo Rising. Mediterranean sailor & marine biologist. Fast wit, constant laughter, and an insatiable desire to explore uncharted coastlines.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 8 },
     relationshipIntent: 'long-term',
@@ -537,8 +537,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 26,
     bio: 'Virgo Sun, Taurus Moon, Scorpio Rising. Cognitive scientist & meditation instructor. Grounded intellect meeting spiritual mysticism. Seeking authentic depth.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 5 },
     relationshipIntent: 'marriage',
@@ -564,8 +564,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 28,
     bio: 'Cancer Sun, Pisces Moon, Scorpio Rising. Triple Water emotional depth. Author & folklorist. Warm firesides, stormy rainy days, and heartfelt poetic conversations.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1480455624315-06be489e18f0?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 6 },
     relationshipIntent: 'long-term',
@@ -591,8 +591,8 @@ export const MOCK_DISCOVER_PROFILES: UserProfile[] = [
     age: 25,
     bio: 'Sagittarius Sun, Aries Moon, Leo Rising. Concert pianist & mountaineer. Vibrant energy, spontaneous weekend getaways, and deep discussions on the harmony of the universe.',
     profilePhotos: [
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
     ],
     location: { city: 'Paris', country: 'France', distanceKm: 4 },
     relationshipIntent: 'long-term',
@@ -615,13 +615,13 @@ export const MOCK_INITIAL_MATCHES: Match[] = [
     profiles: {
       'demo-user-1': {
         firstName: 'Aria',
-        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+        photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
         sunSign: 'Scorpio',
         age: 26,
       },
       'user-elena': {
         firstName: 'Elena',
-        photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+        photo: 'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?auto=format&fit=crop&w=800&q=80',
         sunSign: 'Pisces',
         age: 25,
       },
@@ -645,13 +645,13 @@ export const MOCK_INITIAL_MATCHES: Match[] = [
     profiles: {
       'demo-user-1': {
         firstName: 'Aria',
-        photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+        photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80',
         sunSign: 'Scorpio',
         age: 26,
       },
       'user-lucas': {
         firstName: 'Lucas',
-        photo: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
+        photo: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80',
         sunSign: 'Scorpio',
         age: 28,
       },
@@ -731,3 +731,4 @@ export const MOCK_INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
     }
   ]
 };
+

@@ -13,7 +13,7 @@ import {
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   User as FirebaseUser,
@@ -177,32 +177,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loginAsDemoUser();
       return;
     }
-    const cred = await signInWithPopup(auth, googleProvider);
-    const [fetchedAccount, fetchedProfile] = await Promise.all([
-      getUserAccount(cred.user.uid),
-      getUserProfile(cred.user.uid),
-    ]);
-
-    if (!fetchedAccount) {
-      const newAccount: UserAccount = {
-        uid: cred.user.uid,
-        email: cred.user.email,
-        displayName: cred.user.displayName,
-        photoURL: cred.user.photoURL,
-        isOnboarded: Boolean(fetchedProfile?.astrologyCompleted),
-        subscriptionTier: fetchedProfile?.subscriptionTier || 'free',
-        role: cred.user.email?.includes('admin') ? 'admin' : 'user',
-        createdAt: new Date().toISOString(),
-      };
-      await saveUserAccount(newAccount);
-      setUser(newAccount);
-    } else {
-      setUser(fetchedAccount);
-    }
-
-    if (fetchedProfile) {
-      setProfile(fetchedProfile);
-    }
+    // Use redirect instead of popup to fix Vercel/mobile auth blocks
+    await signInWithRedirect(auth, googleProvider);
   };
 
   const updateProfile = async (updated: Partial<UserProfile>) => {

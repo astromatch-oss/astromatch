@@ -127,16 +127,16 @@ export default function SignupPage() {
         </button>
 
         {/* Divider */}
-        <div className="relative flex items-center justify-center py-1">
-          <div className="border-t border-white/10 w-full" />
-          <span className="bg-surface-200 px-3 text-[11px] text-text-muted uppercase tracking-wider font-semibold">
-            Or with email
+        <div className="relative flex items-center py-2 w-full">
+          <div className="flex-grow border-t border-white/10" />
+          <span className="flex-shrink-0 px-3 text-[11px] text-text-muted uppercase tracking-wider font-semibold whitespace-nowrap bg-surface-200">
+            or continue with email
           </span>
-          <div className="border-t border-white/10 w-full" />
+          <div className="flex-grow border-t border-white/10" />
         </div>
 
         {/* Email Signup Form */}
-        <form onSubmit={handleEmailSignup} className="space-y-4 text-left">
+        <form onSubmit={handleEmailSignup} className="space-y-4 text-left w-full">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-text-secondary block">Email Address</label>
             <div className="relative">

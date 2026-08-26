@@ -21,10 +21,10 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight max-w-[90vw] md:max-w-4xl mx-auto px-2 pb-2 leading-[1.15] sm:leading-tight text-center">
-          Written in the <span className="bg-gradient-to-r from-cosmic-purple via-cosmic-pink to-amber-300 bg-clip-text text-transparent pr-1">Stars</span>.
+        <h1 className="w-full max-w-4xl mx-auto px-4 pb-2 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-center leading-[1.2] sm:leading-tight overflow-visible">
+          Written in the <span className="bg-gradient-to-r from-cosmic-purple via-cosmic-pink to-amber-300 bg-clip-text text-transparent px-1">Stars.</span>
           <br className="hidden sm:inline" />
-          {' '}Connected in <span className="text-white pr-1">Reality</span>.
+          {' '}Connected in <span className="text-white px-1">Reality.</span>
         </h1>
 
         {/* Hero Subtitle */}

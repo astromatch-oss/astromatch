@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useMatch } from '@/context/MatchContext';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
+import { PhotoUpload } from '@/components/profile/PhotoUpload';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   Shield,
@@ -16,6 +17,8 @@ import {
   AlertTriangle,
   MapPin,
   Calendar,
+  Camera,
+  X,
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -25,14 +28,13 @@ export default function SettingsPage() {
 
   const [firstName, setFirstName] = useState(profile?.firstName || 'Aria');
   const [bio, setBio] = useState(profile?.bio || '');
+  const [currentPhoto, setCurrentPhoto] = useState(profile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80');
+  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const avatarPhoto = getOptimizedImageUrl(
-    profile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-    { width: 128, quality: 75 }
-  );
+  const avatarPhoto = getOptimizedImageUrl(currentPhoto, { width: 128, quality: 75 });
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +43,7 @@ export default function SettingsPage() {
       await updateProfile({
         firstName,
         bio,
+        profilePhotos: [currentPhoto],
       });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2500);
@@ -75,17 +78,36 @@ export default function SettingsPage() {
       {/* Profile Overview Card */}
       <form onSubmit={handleSaveProfile} className="bg-surface-200/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
         <div className="flex items-center gap-4 flex-col sm:flex-row text-center sm:text-left">
-          <div className="w-20 h-20 rounded-2xl overflow-hidden relative border-2 border-cosmic-purple shadow-cosmic flex-shrink-0">
-            <Image
-              src={avatarPhoto}
-              alt={profile?.firstName || 'User'}
-              fill
-              className="object-cover"
-              sizes="80px"
-            />
+          <div className="relative group">
+            <div className="w-20 h-20 rounded-2xl overflow-hidden relative border-2 border-cosmic-purple shadow-cosmic flex-shrink-0">
+              <Image
+                src={avatarPhoto}
+                alt={profile?.firstName || 'User'}
+                fill
+                className="object-cover"
+                sizes="80px"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsEditingPhoto(!isEditingPhoto)}
+              className="absolute -bottom-1 -right-1 p-1.5 rounded-full bg-cosmic-purple text-white hover:bg-cosmic-pink shadow-md transition-colors"
+              title="Change profile portrait"
+            >
+              <Camera className="w-3.5 h-3.5" />
+            </button>
           </div>
           <div className="space-y-1">
-            <h2 className="text-xl font-bold text-white">{profile?.firstName || 'Aria'}, {profile?.age || 26}</h2>
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <h2 className="text-xl font-bold text-white">{profile?.firstName || 'Aria'}, {profile?.age || 26}</h2>
+              <button
+                type="button"
+                onClick={() => setIsEditingPhoto(!isEditingPhoto)}
+                className="text-xs text-cosmic-purple hover:text-purple-300 font-medium ml-1"
+              >
+                {isEditingPhoto ? 'Done' : 'Change Photo'}
+              </button>
+            </div>
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-1">
               {profile?.sunSign && <AstrologyBadge sign={profile.sunSign} label="Sun" size="sm" />}
               {profile?.moonSign && <AstrologyBadge sign={profile.moonSign} label="Moon" size="sm" />}
@@ -93,6 +115,28 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
+
+        {/* Photo Upload Accordion */}
+        {isEditingPhoto && (
+          <div className="p-4 rounded-2xl bg-surface-100/80 border border-cosmic-purple/30 space-y-3 animate-in fade-in">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white uppercase tracking-wider">Update Celestial Portrait</span>
+              <button
+                type="button"
+                onClick={() => setIsEditingPhoto(false)}
+                className="p-1 rounded-lg text-text-muted hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <PhotoUpload
+              photo={currentPhoto}
+              onPhotoChange={(newPhoto) => {
+                setCurrentPhoto(newPhoto);
+              }}
+            />
+          </div>
+        )}
 
         {saveSuccess && (
           <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs">

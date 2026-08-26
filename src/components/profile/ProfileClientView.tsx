@@ -10,7 +10,6 @@ import { useMatch } from '@/context/MatchContext';
 import { MOCK_DISCOVER_PROFILES } from '@/lib/mockData';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
-import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
   ArrowLeft,
@@ -23,6 +22,11 @@ import {
 
 const ReportModal = dynamic(
   () => import('@/components/safety/ReportModal').then((mod) => mod.ReportModal),
+  { ssr: false }
+);
+
+const CompatibilityMeter = dynamic(
+  () => import('@/components/astrology/CompatibilityMeter').then((mod) => mod.CompatibilityMeter),
   { ssr: false }
 );
 

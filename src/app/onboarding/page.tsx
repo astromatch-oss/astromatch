@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -8,7 +9,6 @@ import { UserProfile, Gender, InterestedIn, RelationshipIntent } from '@/types/u
 import { searchCities, findCityCoordinates, CityLocation } from '@/lib/astrology/cities';
 import { computeCompleteNatalChart } from '@/lib/astrology/calculator';
 import { validateProfileContent } from '@/lib/safety';
-import { BirthChartCard } from '@/components/astrology/BirthChartCard';
 import { PhotoUpload } from '@/components/profile/PhotoUpload';
 import {
   Sparkles,
@@ -21,6 +21,11 @@ import {
   AlertCircle,
   Compass,
 } from 'lucide-react';
+
+const BirthChartCard = dynamic(
+  () => import('@/components/astrology/BirthChartCard').then((mod) => mod.BirthChartCard),
+  { ssr: false }
+);
 
 const INTEREST_TAGS = [
   'Astrology', 'Stargazing', 'Modern Art', 'Vinyl Records', 'Philosophy',
@@ -327,7 +332,7 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            {/* Live Chart Calculation Preview Card */}
+            {/* Live Chart Calculation Preview Card (Lazy-Loaded) */}
             <BirthChartCard
               birthChart={computedChart}
               birthCity={birthCity}

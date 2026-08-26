@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { MOCK_DISCOVER_PROFILES } from '@/lib/mockData';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { ZODIAC_SIGNS } from '@/lib/astrology/zodiacData';
-import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
@@ -18,6 +18,11 @@ import {
   Compass,
 } from 'lucide-react';
 import { ZodiacSign } from '@/types/astrology';
+
+const CompatibilityMeter = dynamic(
+  () => import('@/components/astrology/CompatibilityMeter').then((mod) => mod.CompatibilityMeter),
+  { ssr: false }
+);
 
 export function CompatibilityClientView({ targetUserId }: { targetUserId: string }) {
   const { profile: myProfile } = useAuth();
@@ -161,7 +166,7 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
         </div>
       </div>
 
-      {/* Compatibility Score Component */}
+      {/* Compatibility Score Component (Lazy Loaded) */}
       <CompatibilityMeter compatibility={synastry} showBreakdown={true} />
     </div>
   );

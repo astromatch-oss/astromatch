@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
   output: 'export',
   trailingSlash: true,
   reactStrictMode: true,
@@ -26,6 +28,9 @@ const nextConfig = {
         hostname: 'api.dicebear.com',
       },
     ],
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'date-fns', 'framer-motion'],
   },
 };
 

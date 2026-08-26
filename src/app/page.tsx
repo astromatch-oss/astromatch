@@ -28,7 +28,7 @@ export default function LandingPage() {
         </h1>
 
         {/* Hero Subtitle */}
-        <p className="mt-6 text-base sm:text-xl text-text-secondary max-w-2xl text-balance leading-relaxed">
+        <p className="mt-6 text-base sm:text-xl text-text-secondary max-w-2xl mx-auto text-center leading-relaxed list-none">
           Move beyond superficial swipes. AstroMatch combines high-fidelity birth chart synastry, elemental resonance, and modern romantic design to connect you with souls aligned with your celestial blueprint.
         </p>
 

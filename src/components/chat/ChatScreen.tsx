@@ -48,7 +48,14 @@ const ReportModal = dynamic(
 
 const CosmicWindowBanner = dynamic(
   () => import('@/components/chat/CosmicWindowBanner').then((mod) => mod.CosmicWindowBanner),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full px-3 sm:px-4 pt-2 pb-1">
+        <div className="h-14 rounded-2xl bg-surface-100/60 border border-white/5 animate-pulse" />
+      </div>
+    ),
+  }
 );
 
 const CheckoutModal = dynamic(

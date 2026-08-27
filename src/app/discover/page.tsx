@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ import { DiscoverCard } from '@/components/discover/DiscoverCard';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { CompatibilityMeter } from '@/components/astrology/CompatibilityMeter';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
+import { CosmicSpinner } from '@/components/ui/CosmicSpinner';
 import {
   Sparkles,
   RefreshCw,
@@ -44,7 +45,10 @@ const ReportModal = dynamic(
 
 const CosmicOrbitRadar = dynamic(
   () => import('@/components/discover/CosmicOrbitRadar').then((mod) => mod.CosmicOrbitRadar),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <CosmicSpinner text="Calibrating Cosmic Orbit Radar..." />,
+  }
 );
 
 const CheckoutModal = dynamic(

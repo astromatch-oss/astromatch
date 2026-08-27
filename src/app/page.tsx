@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Sparkles, Heart, Compass, Shield, Zap, ArrowRight, Stars } from 'lucide-react';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
+import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 
 export default function LandingPage() {
   const { user, loginAsDemoUser } = useAuth();
@@ -73,9 +74,10 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden relative border border-white/20">
                 <Image
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+                  src={getOptimizedImageUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80', { width: 96, quality: 80 })}
                   alt="Aria"
                   fill
+                  priority
                   className="object-cover"
                   sizes="48px"
                 />

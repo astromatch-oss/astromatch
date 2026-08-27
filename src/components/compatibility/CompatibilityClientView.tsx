@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -28,7 +28,12 @@ import { ZodiacSign } from '@/types/astrology';
 
 const CompatibilityMeter = dynamic(
   () => import('@/components/astrology/CompatibilityMeter').then((mod) => mod.CompatibilityMeter),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-44 w-full rounded-3xl bg-surface-200/50 border border-white/5 animate-pulse" />
+    ),
+  }
 );
 
 const CheckoutModal = dynamic(

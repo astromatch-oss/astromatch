@@ -27,7 +27,12 @@ const ReportModal = dynamic(
 
 const CompatibilityMeter = dynamic(
   () => import('@/components/astrology/CompatibilityMeter').then((mod) => mod.CompatibilityMeter),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-44 w-full rounded-3xl bg-surface-200/50 border border-white/5 animate-pulse" />
+    ),
+  }
 );
 
 export function ProfileClientView({ targetId }: { targetId: string }) {

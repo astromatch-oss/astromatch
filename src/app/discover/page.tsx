@@ -27,6 +27,8 @@ import {
   Droplets,
   Wind,
   Mountain,
+  Radio,
+  Crown,
 } from 'lucide-react';
 
 // Lazy load modals for reduced mobile bundle weight
@@ -40,8 +42,18 @@ const ReportModal = dynamic(
   { ssr: false }
 );
 
+const CosmicOrbitRadar = dynamic(
+  () => import('@/components/discover/CosmicOrbitRadar').then((mod) => mod.CosmicOrbitRadar),
+  { ssr: false }
+);
+
+const CheckoutModal = dynamic(
+  () => import('@/components/subscription/CheckoutModal').then((mod) => mod.CheckoutModal),
+  { ssr: false }
+);
+
 export default function DiscoverPage() {
-  const { user, profile: currentUserProfile, loginAsDemoUser } = useAuth();
+  const { user, profile: currentUserProfile, loginAsDemoUser, subscriptionTier, isDemoMode } = useAuth();
   const {
     currentProfile,
     discoverProfiles,
@@ -54,9 +66,10 @@ export default function DiscoverPage() {
     refreshDiscover,
   } = useMatch();
 
-  const [viewMode, setViewMode] = useState<'deck' | 'grid'>('deck');
+  const [viewMode, setViewMode] = useState<'deck' | 'grid' | 'orbit'>('deck');
   const [elementFilter, setElementFilter] = useState<'All' | AstrologicalElement>('All');
   const [reportingProfile, setReportingProfile] = useState<UserProfile | null>(null);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   // Keyboard navigation for Tinder-style swiping
   useEffect(() => {
@@ -122,7 +135,7 @@ export default function DiscoverPage() {
   return (
     <div className="flex-1 flex flex-col items-center px-4 py-4 sm:py-6 max-w-5xl mx-auto w-full space-y-4">
       {/* Top Header & View Controls */}
-      <div className="w-full flex items-center justify-between px-2">
+      <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-3">
         <div className="flex items-center gap-2">
           <Compass className="w-5 h-5 text-cosmic-purple animate-spin-slow" />
           <h1 className="text-lg font-bold text-white tracking-tight">Cosmic Discovery</h1>
@@ -133,32 +146,49 @@ export default function DiscoverPage() {
           </span>
         </div>
 
-        {/* View Switcher: Card Deck vs Grid */}
-        <div className="flex items-center gap-2">
+        {/* View Switcher: Card Deck vs Grid vs Orbit Radar */}
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           <div className="bg-surface-100 p-1 rounded-xl border border-white/10 flex items-center gap-1">
             <button
               onClick={() => setViewMode('deck')}
-              className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`p-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                 viewMode === 'deck'
                   ? 'bg-cosmic-purple text-white shadow-sm'
                   : 'text-text-muted hover:text-white'
               }`}
               title="Swipe Deck View"
             >
-              <Layers className="w-4 h-4" />
-              <span className="hidden sm:inline">Deck</span>
+              <Layers className="w-3.5 h-3.5" />
+              <span>Deck</span>
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`p-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                 viewMode === 'grid'
                   ? 'bg-cosmic-purple text-white shadow-sm'
                   : 'text-text-muted hover:text-white'
               }`}
               title="Celestial Grid View"
             >
-              <LayoutGrid className="w-4 h-4" />
-              <span className="hidden sm:inline">Grid</span>
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Grid</span>
+            </button>
+            <button
+              onClick={() => setViewMode('orbit')}
+              className={`p-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                viewMode === 'orbit'
+                  ? 'bg-gradient-to-r from-amber-500/80 to-purple-600/80 text-white shadow-cosmic'
+                  : 'text-amber-300/80 hover:text-amber-300'
+              }`}
+              title="Live Venue Orbit Radar"
+            >
+              <Radio className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+              <span>Orbit 🛰️</span>
+              {subscriptionTier !== 'vip' && !isDemoMode && (
+                <span className="text-[9px] px-1 rounded bg-amber-400/20 text-amber-300 uppercase font-extrabold border border-amber-400/30">
+                  VIP
+                </span>
+              )}
             </button>
           </div>
 
@@ -386,6 +416,19 @@ export default function DiscoverPage() {
         </div>
       )}
 
+      {/* MODE 3: Live Cosmic Orbit Radar */}
+      {viewMode === 'orbit' && (
+        <CosmicOrbitRadar
+          currentUser={currentUserProfile || { sunSign: 'Scorpio' }}
+          profiles={discoverProfiles}
+          subscriptionTier={subscriptionTier}
+          isDemoMode={isDemoMode}
+          onLike={(p, type) => likeProfile(p, type)}
+          onPass={(p) => passProfile(p)}
+          onUnlockVip={() => setIsCheckoutOpen(true)}
+        />
+      )}
+
       {/* Mutual Match Modal (Lazy Loaded) */}
       {newMatchModalData && (
         <MatchModal
@@ -403,6 +446,18 @@ export default function DiscoverPage() {
           onSubmitReport={async (userId, reason, details) => {
             await reportProfile(userId, reason, details);
           }}
+        />
+      )}
+
+      {/* VIP Checkout Paywall Modal (Lazy Loaded) */}
+      {isCheckoutOpen && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          tier="vip"
+          billingCycle="yearly"
+          price="$239.88"
+          onSuccess={() => setIsCheckoutOpen(false)}
         />
       )}
     </div>

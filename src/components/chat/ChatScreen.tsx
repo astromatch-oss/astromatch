@@ -46,6 +46,16 @@ const ReportModal = dynamic(
   { ssr: false }
 );
 
+const CosmicWindowBanner = dynamic(
+  () => import('@/components/chat/CosmicWindowBanner').then((mod) => mod.CosmicWindowBanner),
+  { ssr: false }
+);
+
+const CheckoutModal = dynamic(
+  () => import('@/components/subscription/CheckoutModal').then((mod) => mod.CheckoutModal),
+  { ssr: false }
+);
+
 const QUICK_EMOJIS = ['✨', '💫', '🌙', '🪐', '💖', '🔥', '☕', '🌟'];
 
 interface ChatScreenProps {
@@ -55,7 +65,7 @@ interface ChatScreenProps {
 export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
   const router = useRouter();
 
-  const { user, profile } = useAuth();
+  const { user, profile, subscriptionTier, isDemoMode } = useAuth();
   const { matches, reportProfile, blockProfile } = useMatch();
   const { messages, getMatchMessages, sendMessage, markAsRead, setActiveMatchId } = useChat();
 
@@ -71,6 +81,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize selectedMatchId based on route params, query string or screen width
@@ -487,6 +498,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
               </div>
             </div>
 
+            {/* Feature 1: Cosmic Window (Transit-Based Date Timing Banner) */}
+            <CosmicWindowBanner
+              currentUser={profile || { firstName: 'You', sunSign: 'Scorpio' }}
+              partner={partner}
+              subscriptionTier={subscriptionTier}
+              isDemoMode={isDemoMode}
+              onUnlockVip={() => setIsCheckoutOpen(true)}
+            />
+
             {/* Scrollable Message Thread */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 custom-scrollbar">
               {/* Inception badge */}
@@ -669,7 +689,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
         />
       )}
 
-      {/* Interactive Lazy-Loaded Synastry Breakdown Modal */}
+      {/* Interactive Lazy-Loaded Synastry Breakdown Modal with Composite Destiny */}
       {selectedMatchId && showSynastryModal && (
         <SynastryModal
           isOpen={showSynastryModal}
@@ -677,6 +697,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
           userA={profile || { firstName: 'You', sunSign: 'Scorpio' }}
           partner={partner}
           compatibility={synastry}
+          subscriptionTier={subscriptionTier}
+          isDemoMode={isDemoMode}
+          onUnlockVip={() => setIsCheckoutOpen(true)}
           onShareToChat={async (text) => {
             if (selectedMatchId) {
               await sendMessage(selectedMatchId, partnerId, text, 'icebreaker');
@@ -695,6 +718,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ initialMatchId }) => {
             await reportProfile(uid, reason, details);
             setSelectedMatchId(null);
           }}
+        />
+      )}
+
+      {/* VIP Checkout Paywall Modal */}
+      {isCheckoutOpen && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          tier="vip"
+          billingCycle="yearly"
+          price="$239.88"
+          onSuccess={() => setIsCheckoutOpen(false)}
         />
       )}
     </div>

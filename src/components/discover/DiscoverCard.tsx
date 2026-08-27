@@ -8,6 +8,7 @@ import { astrologyService } from '@/lib/astrology/astrologyService';
 import { AstrologyBadge } from '../astrology/AstrologyBadge';
 import { CompatibilityMeter } from '../astrology/CompatibilityMeter';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
+import { calculateCompositeDestiny } from '@/lib/astrology/compositeAndTransits';
 import {
   Heart,
   X,
@@ -20,6 +21,7 @@ import {
   Sun,
   Moon,
   Sunrise,
+  Crown,
 } from 'lucide-react';
 
 interface DiscoverCardProps {
@@ -46,6 +48,11 @@ export const DiscoverCard: React.FC<DiscoverCardProps> = ({
 
   // Compute synastry compatibility
   const synastry = astrologyService.calculateSynastry(
+    currentUserProfile || { sunSign: 'Scorpio', moonSign: 'Pisces' },
+    profile
+  );
+
+  const compositeDestiny = calculateCompositeDestiny(
     currentUserProfile || { sunSign: 'Scorpio', moonSign: 'Pisces' },
     profile
   );
@@ -98,19 +105,19 @@ export const DiscoverCard: React.FC<DiscoverCardProps> = ({
         />
 
         {/* Swipe Tap Zones for Photos */}
-        <div className="absolute inset-0 flex z-10">
-          <div className="w-1/2 h-full cursor-pointer" onClick={prevPhoto} />
-          <div className="w-1/2 h-full cursor-pointer" onClick={nextPhoto} />
+        <div className="absolute inset-0 z-10 flex">
+          <div className="w-1/2 h-3/4 cursor-w-resize" onClick={prevPhoto} />
+          <div className="w-1/2 h-3/4 cursor-e-resize" onClick={nextPhoto} />
         </div>
 
-        {/* Indicator Bars */}
+        {/* Photo Index Indicator Dots */}
         {photos.length > 1 && (
-          <div className="absolute top-3 left-3 right-3 z-20 flex gap-1.5">
-            {photos.map((_, idx) => (
+          <div className="absolute top-3 left-0 right-0 z-20 flex justify-center gap-1.5 px-4 pointer-events-none">
+            {photos.map((_, i) => (
               <div
-                key={idx}
-                className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                  idx === activePhotoIdx ? 'bg-white' : 'bg-white/30'
+                key={i}
+                className={`h-1 rounded-full transition-all duration-200 ${
+                  i === activePhotoIdx ? 'w-6 bg-white shadow' : 'w-1.5 bg-white/40'
                 }`}
               />
             ))}
@@ -163,7 +170,13 @@ export const DiscoverCard: React.FC<DiscoverCardProps> = ({
       </div>
 
       {/* Card Content Footer */}
-      <div className="relative z-20 p-5 space-y-3 pointer-events-auto">
+      <div className="relative z-20 p-5 space-y-2.5 pointer-events-auto">
+        {/* Relationship Archetype Pill */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 backdrop-blur-md border border-amber-400/30 text-amber-300 text-[11px] font-extrabold shadow-sm">
+          <span>{compositeDestiny.archetypeSymbol}</span>
+          <span>Archetype: {compositeDestiny.archetype}</span>
+        </div>
+
         {/* Name, Age, Location & Synastry Match Badge */}
         <div className="flex items-end justify-between gap-2">
           <div>

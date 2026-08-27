@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,6 +8,10 @@ import { useAuth } from '@/context/AuthContext';
 import { MOCK_DISCOVER_PROFILES } from '@/lib/mockData';
 import { astrologyService } from '@/lib/astrology/astrologyService';
 import { ZODIAC_SIGNS } from '@/lib/astrology/zodiacData';
+import {
+  calculateCompositeDestiny,
+  CompositeDestinyResult,
+} from '@/lib/astrology/compositeAndTransits';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
 import {
@@ -16,6 +20,9 @@ import {
   Heart,
   MessageCircle,
   Compass,
+  Crown,
+  Lock,
+  Flame,
 } from 'lucide-react';
 import { ZodiacSign } from '@/types/astrology';
 
@@ -24,11 +31,20 @@ const CompatibilityMeter = dynamic(
   { ssr: false }
 );
 
+const CheckoutModal = dynamic(
+  () => import('@/components/subscription/CheckoutModal').then((mod) => mod.CheckoutModal),
+  { ssr: false }
+);
+
 export function CompatibilityClientView({ targetUserId }: { targetUserId: string }) {
-  const { profile: myProfile } = useAuth();
+  const { profile: myProfile, subscriptionTier, isDemoMode } = useAuth();
+  const isVip = subscriptionTier === 'vip' || isDemoMode;
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   // Find target profile
-  const partnerProfile = MOCK_DISCOVER_PROFILES.find((p) => p.userId === targetUserId) || MOCK_DISCOVER_PROFILES[0];
+  const partnerProfile =
+    MOCK_DISCOVER_PROFILES.find((p) => p.userId === targetUserId) || MOCK_DISCOVER_PROFILES[0];
+
   const userA = myProfile || {
     firstName: 'You',
     sunSign: 'Scorpio' as ZodiacSign,
@@ -39,22 +55,25 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
   };
 
   const synastry = astrologyService.calculateSynastry(userA, partnerProfile);
+  const compositeDestiny: CompositeDestinyResult = calculateCompositeDestiny(userA, partnerProfile);
 
   const signA = ZODIAC_SIGNS[(userA.sunSign as ZodiacSign) || 'Scorpio'];
   const signB = ZODIAC_SIGNS[partnerProfile.sunSign] || ZODIAC_SIGNS['Pisces'];
 
   const photoA = getOptimizedImageUrl(
-    myProfile?.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+    myProfile?.profilePhotos?.[0] ||
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
     { width: 128, quality: 75 }
   );
 
   const photoB = getOptimizedImageUrl(
-    partnerProfile.profilePhotos?.[0] || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+    partnerProfile.profilePhotos?.[0] ||
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
     { width: 128, quality: 75 }
   );
 
   return (
-    <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6 space-y-6">
+    <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6 space-y-6 animate-in fade-in">
       {/* Top Header */}
       <div className="flex items-center justify-between">
         <Link
@@ -130,6 +149,123 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
         </div>
       </div>
 
+      {/* Feature 2: Composite Destiny Entity (Relationship Archetype Card) */}
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-purple-900/30 via-surface-200 to-amber-900/20 border-2 border-amber-400/40 space-y-4 shadow-cosmic-gold relative overflow-hidden">
+        <div className="flex items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-extrabold uppercase tracking-wider">
+            <span>{compositeDestiny.archetypeSymbol}</span>
+            <span>Relationship Archetype</span>
+          </div>
+
+          <span className="text-xs text-purple-300 font-medium">
+            {compositeDestiny.elementalBlend}
+          </span>
+        </div>
+
+        <div className="space-y-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            {compositeDestiny.archetype}
+          </h2>
+          <p className="text-xs sm:text-sm text-amber-300 font-semibold">
+            {compositeDestiny.archetypeTagline}
+          </p>
+        </div>
+
+        {/* 2-Sentence Dynamic AI Relationship Forecast */}
+        <div className="p-4 rounded-2xl bg-surface-100/90 border border-white/10 text-xs sm:text-sm text-white leading-relaxed space-y-1">
+          <span className="font-bold text-amber-300 block text-xs uppercase tracking-wider">
+            ✨ AI Composite Destiny Forecast:
+          </span>
+          <p className="italic text-text-secondary leading-relaxed">{compositeDestiny.aiForecast}</p>
+        </div>
+
+        {/* Strengths Pills */}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {compositeDestiny.coreStrengths.map((str, i) => (
+            <span
+              key={i}
+              className="px-3 py-1 rounded-xl bg-surface-100 border border-white/10 text-xs font-semibold text-purple-200 flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>{str}</span>
+            </span>
+          ))}
+        </div>
+
+        {/* Deep Composite Planetary Placements (VIP Gate vs Unlocked) */}
+        <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <Crown className="w-3.5 h-3.5 text-amber-300" />
+              <span>Deep Composite Planetary Placements</span>
+            </h3>
+            {isVip ? (
+              <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                VIP Full Analysis
+              </span>
+            ) : (
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-surface-100 text-purple-300 border border-white/10">
+                🔒 VIP Protected
+              </span>
+            )}
+          </div>
+
+          {isVip ? (
+            <div className="space-y-3 animate-in fade-in">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                {compositeDestiny.compositePlanets.map((planet, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-2xl bg-surface-100 border border-white/5 space-y-1"
+                  >
+                    <div className="flex items-center justify-between font-bold text-white">
+                      <span className="flex items-center gap-1.5">
+                        <span className="text-amber-300 font-mono text-sm">{planet.symbol}</span>
+                        <span>{planet.planet}</span>
+                      </span>
+                      <AstrologyBadge sign={planet.sign} size="sm" />
+                    </div>
+                    <p className="text-[11px] text-text-secondary leading-relaxed">
+                      {planet.meaning}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Karmic Evolution Lesson */}
+              <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 space-y-1 text-xs">
+                <span className="font-bold text-purple-300 text-xs uppercase tracking-wider block">
+                  🌌 Karmic Evolution Lesson:
+                </span>
+                <p className="text-text-secondary leading-relaxed">
+                  {compositeDestiny.karmicLesson}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="relative py-6 px-4 rounded-2xl bg-surface-100/90 border border-amber-400/30 text-center space-y-3">
+              <div className="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 mx-auto shadow-cosmic">
+                <Lock className="w-5 h-5" />
+              </div>
+              <div className="space-y-1 max-w-sm mx-auto">
+                <h4 className="text-sm font-bold text-white">
+                  Unlock Complete Composite Planetary Analysis
+                </h4>
+                <p className="text-xs text-text-secondary">
+                  AstroMatch VIP members unlock the complete 4-point composite chart, midpoint houses, and karmic evolution lessons for this relationship.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCheckoutOpen(true)}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-surface-400 font-extrabold text-xs shadow-cosmic hover:opacity-95 transition-all hover:scale-105"
+              >
+                Unlock VIP Composite Blueprint
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Detailed Planetary Aspects Breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Core Sun & Element Harmony */}
@@ -168,6 +304,18 @@ export function CompatibilityClientView({ targetUserId }: { targetUserId: string
 
       {/* Compatibility Score Component (Lazy Loaded) */}
       <CompatibilityMeter compatibility={synastry} showBreakdown={true} />
+
+      {/* VIP Checkout Paywall Modal */}
+      {isCheckoutOpen && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          tier="vip"
+          billingCycle="yearly"
+          price="$239.88"
+          onSuccess={() => setIsCheckoutOpen(false)}
+        />
+      )}
     </div>
   );
 }

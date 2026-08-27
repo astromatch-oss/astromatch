@@ -1,11 +1,15 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { UserProfile } from '@/types/user';
+import { UserProfile, SubscriptionTier } from '@/types/user';
 import { CompatibilityResult, ZodiacSign } from '@/types/astrology';
 import { AstrologyBadge } from '@/components/astrology/AstrologyBadge';
 import { getOptimizedImageUrl } from '@/lib/imageOptimization';
+import {
+  calculateCompositeDestiny,
+  CompositeDestinyResult,
+} from '@/lib/astrology/compositeAndTransits';
 import {
   Sparkles,
   Heart,
@@ -15,6 +19,9 @@ import {
   Send,
   CheckCircle2,
   AlertCircle,
+  Crown,
+  Lock,
+  Zap,
 } from 'lucide-react';
 
 interface SynastryModalProps {
@@ -23,7 +30,10 @@ interface SynastryModalProps {
   userA: Partial<UserProfile>;
   partner: Partial<UserProfile>;
   compatibility: CompatibilityResult;
+  subscriptionTier?: SubscriptionTier;
+  isDemoMode?: boolean;
   onShareToChat?: (text: string) => void;
+  onUnlockVip?: () => void;
 }
 
 export const SynastryModal: React.FC<SynastryModalProps> = ({
@@ -32,9 +42,13 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
   userA,
   partner,
   compatibility,
+  subscriptionTier = 'free',
+  isDemoMode = false,
   onShareToChat,
+  onUnlockVip,
 }) => {
-  const [activeTab, setActiveTab] = useState<'aspects' | 'elements' | 'insights'>('aspects');
+  const isVip = subscriptionTier === 'vip' || isDemoMode;
+  const [activeTab, setActiveTab] = useState<'aspects' | 'composite' | 'elements' | 'insights'>('composite');
   const [sharedToast, setSharedToast] = useState(false);
 
   if (!isOpen) return null;
@@ -63,6 +77,9 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
     title: 'Water & Water Oceanic Affinity',
     description: 'Profound emotional resonance and telepathic understanding.',
   };
+
+  // Calculate Composite Destiny Entity
+  const compositeDestiny: CompositeDestinyResult = calculateCompositeDestiny(userA, partner);
 
   const handleShareInsight = (text: string) => {
     if (onShareToChat) {
@@ -95,7 +112,7 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
 
           {/* Dual Connected Photo-Realistic Avatar Rings */}
           <div className="flex items-center justify-center gap-4 sm:gap-8 pt-1">
-            {/* Person A: Aria */}
+            {/* Person A */}
             <div className="flex flex-col items-center gap-1.5">
               <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full p-0.5 bg-gradient-to-tr from-cosmic-purple to-cosmic-violet shadow-cosmic relative">
                 <div className="w-full h-full rounded-full overflow-hidden relative border-2 border-surface-300 bg-surface-300">
@@ -123,7 +140,7 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
               </span>
             </div>
 
-            {/* Person B: Elena */}
+            {/* Person B */}
             <div className="flex flex-col items-center gap-1.5">
               <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full p-0.5 bg-gradient-to-tr from-cosmic-pink to-amber-400 shadow-cosmic-rose relative">
                 <div className="w-full h-full rounded-full overflow-hidden relative border-2 border-surface-300 bg-surface-300">
@@ -147,8 +164,9 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
           </p>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center justify-center gap-2 border-b border-white/10 pb-2">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 border-b border-white/10 pb-2">
             {[
+              { id: 'composite', label: 'Composite Destiny', icon: Crown, highlight: true },
               { id: 'aspects', label: 'Planetary Aspects', icon: Sparkles },
               { id: 'elements', label: 'Elemental Synergy', icon: Flame },
               { id: 'insights', label: 'Strengths & Advice', icon: Heart },
@@ -161,7 +179,9 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                     isActive
-                      ? 'bg-cosmic-purple text-white shadow-cosmic'
+                      ? tab.highlight
+                        ? 'bg-gradient-to-r from-amber-500 to-purple-600 text-white shadow-cosmic-gold'
+                        : 'bg-cosmic-purple text-white shadow-cosmic'
                       : 'text-text-muted hover:text-white hover:bg-surface-100'
                   }`}
                 >
@@ -175,7 +195,148 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
 
         {/* Tab Content Area */}
         <div className="flex-1 overflow-y-auto pr-1 space-y-4 custom-scrollbar text-left">
-          {/* TAB 1: Planetary Aspects */}
+          {/* TAB 1: Composite Destiny Entity (Relationship Archetype) */}
+          {activeTab === 'composite' && (
+            <div className="space-y-4 animate-in fade-in duration-150">
+              {/* Archetype Hero Card */}
+              <div className="p-5 rounded-3xl bg-gradient-to-br from-purple-900/30 via-surface-100 to-amber-900/20 border-2 border-amber-400/40 space-y-3 relative overflow-hidden shadow-cosmic-gold">
+                <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+
+                <div className="flex items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-extrabold uppercase tracking-wider">
+                    <span>{compositeDestiny.archetypeSymbol}</span>
+                    <span>Relationship Archetype</span>
+                  </div>
+
+                  <span className="text-xs text-purple-300 font-medium">
+                    {compositeDestiny.elementalBlend}
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                    {compositeDestiny.archetype}
+                  </h3>
+                  <p className="text-xs text-amber-300 font-semibold">
+                    {compositeDestiny.archetypeTagline}
+                  </p>
+                </div>
+
+                {/* 2-Sentence Dynamic AI Relationship Forecast */}
+                <div className="p-3.5 rounded-2xl bg-surface-200/80 border border-white/10 text-xs text-white leading-relaxed space-y-1">
+                  <span className="font-bold text-amber-300 block text-[11px] uppercase tracking-wider">
+                    ✨ AI Composite Destiny Forecast:
+                  </span>
+                  <p className="italic text-text-secondary">{compositeDestiny.aiForecast}</p>
+                </div>
+
+                {/* Strengths Pills */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {compositeDestiny.coreStrengths.map((str, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 rounded-lg bg-surface-100 border border-white/10 text-[11px] font-semibold text-purple-200 flex items-center gap-1"
+                    >
+                      <Sparkles className="w-3 h-3 text-amber-300" />
+                      <span>{str}</span>
+                    </span>
+                  ))}
+                </div>
+
+                {onShareToChat && (
+                  <button
+                    onClick={() =>
+                      handleShareInsight(
+                        `🔮 Composite Destiny Archetype: "${compositeDestiny.archetype}" (${compositeDestiny.archetypeTagline}) — ${compositeDestiny.aiForecast}`
+                      )
+                    }
+                    className="text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1.5 pt-1 transition-colors"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Share Archetype in Chat</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Deep Composite Planetary Placements (VIP Gate vs Unlocked) */}
+              <div className="p-4 rounded-3xl bg-surface-100 border border-white/10 space-y-3 relative overflow-hidden">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <Crown className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Deep Composite Midpoint Placements</span>
+                  </h4>
+                  {isVip ? (
+                    <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                      VIP Full Analysis
+                    </span>
+                  ) : (
+                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-surface-200 text-purple-300 border border-white/10">
+                      🔒 VIP Protected
+                    </span>
+                  )}
+                </div>
+
+                {isVip ? (
+                  <div className="space-y-2.5 animate-in fade-in">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                      {compositeDestiny.compositePlanets.map((planet, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3 rounded-2xl bg-surface-200/80 border border-white/5 space-y-1"
+                        >
+                          <div className="flex items-center justify-between font-bold text-white">
+                            <span className="flex items-center gap-1.5">
+                              <span className="text-amber-300 font-mono text-sm">{planet.symbol}</span>
+                              <span>{planet.planet}</span>
+                            </span>
+                            <AstrologyBadge sign={planet.sign} size="sm" />
+                          </div>
+                          <p className="text-[11px] text-text-secondary leading-relaxed">
+                            {planet.meaning}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Karmic Evolution Lesson */}
+                    <div className="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/25 space-y-1 text-xs">
+                      <span className="font-bold text-purple-300 text-[11px] uppercase tracking-wider block">
+                        🌌 Karmic Evolution Lesson:
+                      </span>
+                      <p className="text-text-secondary leading-relaxed">
+                        {compositeDestiny.karmicLesson}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  /* Locked Non-VIP Gate */
+                  <div className="relative py-6 px-4 rounded-2xl bg-surface-200/70 border border-amber-400/30 text-center space-y-3">
+                    <div className="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 mx-auto shadow-cosmic">
+                      <Lock className="w-5 h-5" />
+                    </div>
+                    <div className="space-y-1 max-w-sm mx-auto">
+                      <h5 className="text-sm font-bold text-white">
+                        Unlock Complete Composite Planetary Analysis
+                      </h5>
+                      <p className="text-xs text-text-secondary">
+                        AstroMatch VIP members unlock the complete 4-point composite chart, midpoint houses, and karmic evolution lessons for this relationship.
+                      </p>
+                    </div>
+                    {onUnlockVip && (
+                      <button
+                        onClick={onUnlockVip}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-surface-400 font-extrabold text-xs shadow-cosmic hover:opacity-95 transition-all hover:scale-105"
+                      >
+                        Unlock VIP Composite Blueprint
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: Planetary Aspects */}
           {activeTab === 'aspects' && (
             <div className="space-y-3 animate-in fade-in duration-150">
               {aspects.map((aspect, idx) => (
@@ -214,7 +375,7 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
                     <button
                       onClick={() =>
                         handleShareInsight(
-                          `✨ Synastry Insight: ${aspect.title} (${aspect.aspectType}) - ${aspect.interpretation}`
+                          `✨ Synastry Aspect: ${aspect.title} (${aspect.aspectType}) - ${aspect.interpretation}`
                         )
                       }
                       className="text-[11px] font-semibold text-cosmic-purple hover:text-purple-300 flex items-center gap-1 pt-1 transition-colors"
@@ -228,7 +389,7 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: Elemental Synergy */}
+          {/* TAB 3: Elemental Synergy */}
           {activeTab === 'elements' && (
             <div className="space-y-4 animate-in fade-in duration-150">
               <div className="p-4 rounded-2xl bg-surface-100 border border-white/10 space-y-2">
@@ -304,7 +465,7 @@ export const SynastryModal: React.FC<SynastryModalProps> = ({
             </div>
           )}
 
-          {/* TAB 3: Strengths & Advice */}
+          {/* TAB 4: Strengths & Advice */}
           {activeTab === 'insights' && (
             <div className="space-y-4 animate-in fade-in duration-150">
               {/* Strengths */}
